@@ -117,7 +117,7 @@
  * Derived from Source/WebCore/platform/graphics/FloatQuad.cpp@80f77e94c63ee7202eec3d4b5b1a021dd89011ba
  */
 
-#include "prx/libc/include/general/VabiMacros.hpp"
+#include "prx/libc/include/General.hpp"
 #include "prx/libSceNKWebKit/include/WebCoreExports.hpp"
 #include "prx/libSceNKWebKit/include/WebCoreLayoutExports.hpp"
 
@@ -247,7 +247,9 @@ WebCore::LayoutUnit APS5_VABI _ZN7WebCore14valueForLengthERKNS_6LengthENS_10Layo
 }
 
 WebCore::FloatRect APS5_VABI _ZNK7WebCore9FloatQuad11boundingBoxEv(const WebCore::FloatQuad* self) {
-    return BoundingBox(*self);
+    WebCore::FloatQuad quad;
+    if (!GuestCopyIn_nid_no_patch(&quad, self, sizeof(quad))) NotImplemented_nid_no_patch(__func__);
+    return BoundingBox(quad);
 }
 
 WebCore::FloatRect APS5_VABI _ZN7WebCore19unitedBoundingBoxesERKN3WTF6VectorINS_9FloatQuadELm0ENS0_15CrashOnOverflowELm16ENS0_10FastMallocEEE(const WebCore::FloatQuadVector& quads) {
