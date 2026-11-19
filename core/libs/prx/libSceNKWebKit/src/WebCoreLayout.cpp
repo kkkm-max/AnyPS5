@@ -247,6 +247,7 @@ WebCore::LayoutUnit APS5_VABI _ZN7WebCore14valueForLengthERKNS_6LengthENS_10Layo
 }
 
 WebCore::FloatRect APS5_VABI _ZNK7WebCore9FloatQuad11boundingBoxEv(const WebCore::FloatQuad* self) {
+    if (!self) throw std::invalid_argument("null WebCore object");
     WebCore::FloatQuad quad;
     if (!GuestCopyIn_nid_no_patch(&quad, self, sizeof(quad))) NotImplemented_nid_no_patch(__func__);
     return BoundingBox(quad);
