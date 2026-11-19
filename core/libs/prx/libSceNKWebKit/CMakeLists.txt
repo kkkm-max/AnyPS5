@@ -71,6 +71,9 @@ if(BUILD_TESTING)
         endif()
     endforeach()
 
+    target_compile_definitions(nkwebkit_scalardata_tests PRIVATE NKWEBKIT_TEST_LIBRARY="$<TARGET_FILE:libSceNKWebKit>")
+    target_link_libraries(nkwebkit_scalardata_tests PRIVATE ${CMAKE_DL_LIBS})
+
     add_test_executable(nkwebkit_wtftext_allocation_tests ${CMAKE_CURRENT_SOURCE_DIR}/tests/allocation/WtfTextAllocation.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/StringBuilder.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/WtfString.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/WtfNumberFormat.cpp)
     target_include_directories(nkwebkit_wtftext_allocation_tests PRIVATE ${LIBS_INCLUDE_DIR})
