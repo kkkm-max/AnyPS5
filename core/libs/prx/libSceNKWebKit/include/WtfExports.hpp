@@ -18,6 +18,9 @@ struct SHA1;
 
 extern "C" {
 
+int APS5_VABI _ZN3WTF16codePointCompareENS_10StringViewES0_(NKWebKit::WtfAbi::StringView first, NKWebKit::WtfAbi::StringView second);
+int APS5_VABI _ZN3WTF16codePointCompareERKNS_6StringES2_(const NKWebKit::WtfAbi::String& first, const NKWebKit::WtfAbi::String& second);
+
 [[noreturn]] void APS5_VABI WTFCrash();
 [[noreturn]] void APS5_VABI WTFCrashWithSecurityImplication();
 void APS5_VABI WTFGetBacktrace(void** stack, int* size);

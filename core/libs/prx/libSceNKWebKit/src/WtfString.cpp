@@ -655,6 +655,21 @@ String SubstringSharingImpl(const String& string, unsigned start, unsigned lengt
 }  // namespace NKWebKit::WtfAbi
 
 extern "C" {
+
+int APS5_VABI _ZN3WTF16codePointCompareENS_10StringViewES0_(StringView first, StringView second) {
+    const unsigned commonLength = std::min(first.length, second.length);
+    for (unsigned index = 0; index < commonLength; ++index) {
+        const auto firstUnit = Unit(first, index);
+        const auto secondUnit = Unit(second, index);
+        if (firstUnit < secondUnit) return -1;
+        if (firstUnit > secondUnit) return 1;
+    }
+    return (first.length > second.length) - (first.length < second.length);
+}
+
+int APS5_VABI _ZN3WTF16codePointCompareERKNS_6StringES2_(const String& first, const String& second) {
+    return _ZN3WTF16codePointCompareENS_10StringViewES0_(View(first.impl), View(second.impl));
+}
 String APS5_VABI _ZN3WTF10StringImpl6createEPKDsj(const char16_t* data, unsigned length) {
     return String(CopyImpl({data, length, false}));
 }
