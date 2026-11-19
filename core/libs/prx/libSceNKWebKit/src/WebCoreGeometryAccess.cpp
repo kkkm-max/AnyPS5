@@ -1,36 +1,20 @@
 #include "prx/libSceNKWebKit/include/WebCoreExports.hpp"
+#include "prx/libSceNKWebKit/src/WebCoreLayoutUnit.hpp"
 
 #include <algorithm>
 #include <cmath>
-#include <cstdint>
 #include <limits>
 
 namespace {
-
-int ClampFloatToInteger(float value) {
-    if (value >= static_cast<float>(std::numeric_limits<int>::max())) {
-        return std::numeric_limits<int>::max();
-    }
-    if (!(value > static_cast<float>(std::numeric_limits<int>::min()))) {
-        return std::numeric_limits<int>::min();
-    }
-    return static_cast<int>(value);
-}
-
-int ClampRaw(std::int64_t raw) {
-    return static_cast<int>(std::clamp<std::int64_t>(raw,
-        std::numeric_limits<int>::min(), std::numeric_limits<int>::max()));
-}
 
 int FloorLayout(int raw) {
     return raw / 64 - (raw < 0 && raw % 64 != 0);
 }
 
 int CeilLayoutSum(int first, int second) {
-    const auto sum = std::clamp<std::int64_t>(static_cast<std::int64_t>(first) + second,
-        std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
+    const int sum = WebCore::SaturatedSum(first, second);
     const auto rounded = sum / 64 + (sum > 0 && sum % 64 != 0);
-    return static_cast<int>(std::min(rounded, static_cast<std::int64_t>(std::numeric_limits<int>::max() / 64)));
+    return std::min(rounded, std::numeric_limits<int>::max() / 64);
 }
 
 } // namespace
@@ -38,12 +22,12 @@ int CeilLayoutSum(int first, int second) {
 extern "C" {
 
 WebCore::LayoutRect APS5_VABI _ZN7WebCore19enclosingLayoutRectERKNS_9FloatRectE(const WebCore::FloatRect& rect) {
-    const int left = ClampFloatToInteger(std::floor(rect.m_location.m_x * 64.0f));
-    const int top = ClampFloatToInteger(std::floor(rect.m_location.m_y * 64.0f));
-    const int right = ClampFloatToInteger(std::ceil((rect.m_location.m_x + rect.m_size.m_width) * 64.0f));
-    const int bottom = ClampFloatToInteger(std::ceil((rect.m_location.m_y + rect.m_size.m_height) * 64.0f));
-    return {{{left}, {top}}, {{ClampRaw(static_cast<std::int64_t>(right) - left)},
-        {ClampRaw(static_cast<std::int64_t>(bottom) - top)}}};
+    const int left = WebCore::ClampToInteger(std::floor(rect.m_location.m_x * 64.0f));
+    const int top = WebCore::ClampToInteger(std::floor(rect.m_location.m_y * 64.0f));
+    const int right = WebCore::ClampToInteger(std::ceil((rect.m_location.m_x + rect.m_size.m_width) * 64.0f));
+    const int bottom = WebCore::ClampToInteger(std::ceil((rect.m_location.m_y + rect.m_size.m_height) * 64.0f));
+    return {{{left}, {top}}, {{WebCore::SaturatedDifference(right, left)},
+        {WebCore::SaturatedDifference(bottom, top)}}};
 }
 
 WebCore::AffineTransform APS5_VABI _ZN7WebCore19makeMapBetweenRectsERKNS_9FloatRectES2_(
@@ -80,12 +64,12 @@ WebCore::IntRect APS5_VABI _ZN7WebCore16enclosingIntRectERKNS_10LayoutRectE(cons
 }
 
 WebCore::IntRect APS5_VABI _ZN7WebCore16enclosingIntRectERKNS_9FloatRectE(const WebCore::FloatRect& rect) {
-    const float left = static_cast<float>(ClampFloatToInteger(std::floor(rect.m_location.m_x)));
-    const float top = static_cast<float>(ClampFloatToInteger(std::floor(rect.m_location.m_y)));
-    const float right = static_cast<float>(ClampFloatToInteger(std::ceil(rect.m_location.m_x + rect.m_size.m_width)));
-    const float bottom = static_cast<float>(ClampFloatToInteger(std::ceil(rect.m_location.m_y + rect.m_size.m_height)));
-    return {{ClampFloatToInteger(left), ClampFloatToInteger(top)},
-        {ClampFloatToInteger(right - left), ClampFloatToInteger(bottom - top)}};
+    const float left = static_cast<float>(WebCore::ClampToInteger(std::floor(rect.m_location.m_x)));
+    const float top = static_cast<float>(WebCore::ClampToInteger(std::floor(rect.m_location.m_y)));
+    const float right = static_cast<float>(WebCore::ClampToInteger(std::ceil(rect.m_location.m_x + rect.m_size.m_width)));
+    const float bottom = static_cast<float>(WebCore::ClampToInteger(std::ceil(rect.m_location.m_y + rect.m_size.m_height)));
+    return {{WebCore::ClampToInteger(left), WebCore::ClampToInteger(top)},
+        {WebCore::ClampToInteger(right - left), WebCore::ClampToInteger(bottom - top)}};
 }
 
 bool APS5_VABI _ZN7WebCore16findIntersectionERKNS_10FloatPointES2_S2_S2_RS0_(
