@@ -25,6 +25,7 @@
 #include "prx/libSceNKWebKit/include/FourCCExports.hpp"
 #include "prx/libSceNKWebKit/include/InspectorExports.hpp"
 #include "prx/libSceNKWebKit/include/InventoryExports.hpp"
+#include "prx/libSceNKWebKit/include/ScalarData.hpp"
 #include "prx/libSceNKWebKit/include/JscExports.hpp"
 #include "prx/libSceNKWebKit/include/NoOpExports.hpp"
 #include "prx/libSceNKWebKit/include/ProtoCallFrameExports.hpp"
